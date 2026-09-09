@@ -34,7 +34,7 @@ public class AppConstants {
         public static final String CATEGORIES_MUSIC = "categories_musics"; // model 'categories_music' -> Mongoose pluralized (VERIFY vs DB)
         public static final String MUSICS = "musics";                      // model 'musics'
         public static final String MEDITATION_CATEGORY = "meditation-categories"; // model 'meditation-category' -> pluralized (confirmed vs Node model)
-        public static final String MEDITATION_MEDIA = "meditation_media";  // VERIFY vs DB: model 'meditation_media'; INCONSISTENT with MUSIC_MEDIA ("music_medias") - one pluralization is wrong
+        public static final String MEDITATION_MEDIA = "meditation_medias"; // model 'meditation_media' -> Mongoose pluralized (confirmed: Node $lookup uses "meditation_medias")
         public static final String SKILLS = "skills";                      // model 'skills'
         public static final String LANGUAGES = "languages";                // model 'languages'
         public static final String FAQS = "faqs";                          // model 'faq' -> Mongoose pluralized
