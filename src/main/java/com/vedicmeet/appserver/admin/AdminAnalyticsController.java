@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.vedicmeet.appserver.admin.AdminResponses.execute;
+import static com.vedicmeet.appserver.admin.AdminResponses.executeCodeData;
 
-/** Scaffold port of Node rest-apis/modules/admin/analytics.js. */
+/** Faithful port of Node rest-apis/modules/admin/analytics.js. */
 @RestController
 @RequestMapping("/v2/admin/analytics")
 @RequireRole({Role.ADMIN, Role.SUB_ADMIN})
@@ -29,37 +29,37 @@ public class AdminAnalyticsController {
 
     @GetMapping("/logs")
     public ResponseEntity<Map<String, Object>> logs(@RequestParam Map<String, String> query) {
-        return execute("Analytics logs retrieved successfully", () -> service.logs(query));
+        return executeCodeData("Analytics logs retrieved successfully", () -> service.logs(query));
     }
 
     @GetMapping("/summary")
     public ResponseEntity<Map<String, Object>> summary(@RequestParam Map<String, String> query) {
-        return execute("Analytics summary retrieved successfully", () -> service.summary(query));
+        return executeCodeData("Analytics summary retrieved successfully", () -> service.summary(query));
     }
 
     @GetMapping("/logs/{id}")
     public ResponseEntity<Map<String, Object>> log(@PathVariable String id) {
-        return execute("Analytics log retrieved successfully", () -> service.log(id));
+        return executeCodeData("Analytics log retrieved successfully", () -> service.log(id));
     }
 
     @GetMapping("/unique-devices")
     public ResponseEntity<Map<String, Object>> uniqueDevices(@RequestParam Map<String, String> query) {
-        return execute("Unique devices retrieved successfully", () -> service.uniqueDevices(query));
+        return executeCodeData("Unique devices retrieved successfully", () -> service.uniqueDevices(query));
     }
 
     @GetMapping("/unique-users")
     public ResponseEntity<Map<String, Object>> uniqueUsers(@RequestParam Map<String, String> query) {
-        return execute("Unique users retrieved successfully", () -> service.uniqueUsers(query));
+        return executeCodeData("Unique users retrieved successfully", () -> service.uniqueUsers(query));
     }
 
     @GetMapping("/device/{device_id}")
     public ResponseEntity<Map<String, Object>> device(@PathVariable("device_id") String deviceId, @RequestParam Map<String, String> query) {
-        return execute("Device analytics retrieved successfully", () -> service.device(deviceId, query));
+        return executeCodeData("Device analytics retrieved successfully", () -> service.device(deviceId, query));
     }
 
     @GetMapping("/user/{user_id}")
     public ResponseEntity<Map<String, Object>> user(@PathVariable("user_id") String userId, @RequestParam Map<String, String> query) {
-        return execute("User analytics retrieved successfully", () -> service.user(userId, query));
+        return executeCodeData("User analytics retrieved successfully", () -> service.user(userId, query));
     }
 
     @GetMapping(value = "/export", produces = "text/csv")
