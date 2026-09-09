@@ -31,6 +31,7 @@ public class AppConstants {
     // --- Mongo collection names (Mongoose model registrations) ---
     public static final class Collections {
         public static final String CATEGORIES = "categories";              // model 'categories'
+        public static final String CATEGORIES_MUSIC = "categories_musics"; // model 'categories_music' -> Mongoose pluralized (VERIFY vs DB)
         public static final String MUSICS = "musics";                      // model 'musics'
         public static final String MEDITATION_CATEGORY = "meditation-categories"; // model 'meditation-category' -> pluralized (confirmed vs Node model)
         public static final String MEDITATION_MEDIA = "meditation_media";  // VERIFY vs DB: model 'meditation_media'; INCONSISTENT with MUSIC_MEDIA ("music_medias") - one pluralization is wrong
