@@ -37,6 +37,7 @@ public class AppConstants {
         public static final String MEDITATION_MEDIA = "meditation_media";  // VERIFY vs DB: model 'meditation_media'; INCONSISTENT with MUSIC_MEDIA ("music_medias") - one pluralization is wrong
         public static final String SKILLS = "skills";                      // model 'skills'
         public static final String LANGUAGES = "languages";                // model 'languages'
+        public static final String FAQS = "faqs";                          // model 'faq' -> Mongoose pluralized
         public static final String GIFTS = "gifts";                        // model 'gifts'
         public static final String MEMBERSHIP_DISCOUNTS = "membership_discounts"; // model 'membership_discounts'
         public static final String COMMUNITIES = "communities";            // model 'communities'
