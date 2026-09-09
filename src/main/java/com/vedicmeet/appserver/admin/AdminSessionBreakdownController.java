@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
-import static com.vedicmeet.appserver.admin.AdminResponses.execute;
+import static com.vedicmeet.appserver.admin.AdminResponses.executeData;
 
 @RestController
 @RequestMapping("/v2/admin/v1/session")
@@ -26,16 +26,16 @@ public class AdminSessionBreakdownController {
 
     @GetMapping("/{id}/breakdown")
     public ResponseEntity<Map<String, Object>> breakdown(@PathVariable String id) {
-        return execute("Session breakdown fetched", () -> service.breakdown(id));
+        return executeData("Session breakdown fetched", () -> service.breakdown(id));
     }
 
     @GetMapping("/analytics/coupon-offer")
     public ResponseEntity<Map<String, Object>> couponOfferAnalytics(@RequestParam Map<String, String> query) {
-        return execute("Coupon/offer analytics fetched", () -> service.couponOfferAnalytics(query));
+        return executeData("Coupon/offer analytics fetched", () -> service.couponOfferAnalytics(query));
     }
 
     @GetMapping("/analytics/consultant-coupon")
     public ResponseEntity<Map<String, Object>> consultantCouponAnalytics(@RequestParam Map<String, String> query) {
-        return execute("Consultant coupon analytics fetched", () -> service.consultantCouponAnalytics(query));
+        return executeData("Consultant coupon analytics fetched", () -> service.consultantCouponAnalytics(query));
     }
 }

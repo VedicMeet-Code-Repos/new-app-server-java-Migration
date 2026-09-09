@@ -56,6 +56,24 @@ final class AdminResponses {
         }
     }
 
+    /** Node shape {code:200, success:true, message, data} (e.g. session-breakdown). Failure -> {code:500, success:false, message}. */
+    static ResponseEntity<Map<String, Object>> executeData(String successMessage, Supplier<?> action) {
+        try {
+            Map<String, Object> body = new LinkedHashMap<>();
+            body.put("code", 200);
+            body.put("success", true);
+            body.put("message", successMessage);
+            body.put("data", action.get());
+            return ResponseEntity.ok(body);
+        } catch (Exception error) {
+            Map<String, Object> body = new LinkedHashMap<>();
+            body.put("code", 500);
+            body.put("success", false);
+            body.put("message", message(error));
+            return ResponseEntity.ok(body);
+        }
+    }
+
     static ResponseEntity<Map<String, Object>> simple(Supplier<?> action) {
         try {
             Map<String, Object> body = new LinkedHashMap<>();
