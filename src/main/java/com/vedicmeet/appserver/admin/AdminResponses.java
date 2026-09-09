@@ -30,6 +30,32 @@ final class AdminResponses {
         }
     }
 
+    /** Node shape {success:true, message, data} (e.g. flag /get-flags). Failure -> {success:false, message}. */
+    static ResponseEntity<Map<String, Object>> dataMessage(String successMessage, Supplier<?> action) {
+        try {
+            Map<String, Object> body = new LinkedHashMap<>();
+            body.put("success", true);
+            body.put("message", successMessage);
+            body.put("data", action.get());
+            return ResponseEntity.ok(body);
+        } catch (Exception error) {
+            return ResponseEntity.ok(Map.of("success", false, "message", message(error)));
+        }
+    }
+
+    /** Node shape {success:true, message} with NO data (e.g. DELETE deactivate routes). Failure -> {success:false, message}. */
+    static ResponseEntity<Map<String, Object>> messageOnly(String successMessage, Supplier<?> action) {
+        try {
+            action.get(); // execute the write; result intentionally discarded to match Node's {success, message} shape
+            Map<String, Object> body = new LinkedHashMap<>();
+            body.put("success", true);
+            body.put("message", successMessage);
+            return ResponseEntity.ok(body);
+        } catch (Exception error) {
+            return ResponseEntity.ok(Map.of("success", false, "message", message(error)));
+        }
+    }
+
     static ResponseEntity<Map<String, Object>> simple(Supplier<?> action) {
         try {
             Map<String, Object> body = new LinkedHashMap<>();

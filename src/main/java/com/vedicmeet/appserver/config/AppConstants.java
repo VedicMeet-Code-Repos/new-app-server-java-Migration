@@ -32,8 +32,8 @@ public class AppConstants {
     public static final class Collections {
         public static final String CATEGORIES = "categories";              // model 'categories'
         public static final String MUSICS = "musics";                      // model 'musics'
-        public static final String MEDITATION_CATEGORY = "meditation-categories"; // VERIFY: model 'meditation-category'
-        public static final String MEDITATION_MEDIA = "meditation_media";  // VERIFY: model 'meditation_media'
+        public static final String MEDITATION_CATEGORY = "meditation-categories"; // model 'meditation-category' -> pluralized (confirmed vs Node model)
+        public static final String MEDITATION_MEDIA = "meditation_media";  // VERIFY vs DB: model 'meditation_media'; INCONSISTENT with MUSIC_MEDIA ("music_medias") - one pluralization is wrong
         public static final String SKILLS = "skills";                      // model 'skills'
         public static final String LANGUAGES = "languages";                // model 'languages'
         public static final String GIFTS = "gifts";                        // model 'gifts'
@@ -41,18 +41,18 @@ public class AppConstants {
         public static final String COMMUNITIES = "communities";            // model 'communities'
         public static final String MASTERS = "masters";                    // model 'masters'
         public static final String USERS = "users";                        // model 'user'
-        public static final String CMS = "cms";                            // VERIFY: model 'cms'
-        public static final String GALLERIES = "galleries";                // VERIFY: model 'gallery'
+        public static final String CMS = "cms";                            // VERIFY vs DB: model 'cms' (mongoose pluralization of an -s word is ambiguous)
+        public static final String GALLERIES = "galleries";                // model 'gallery' -> pluralized (confirmed vs Node model)
         public static final String CONSULTANTS = "consultants";            // model 'consultant'
-        public static final String EXPLORES = "explores";                  // VERIFY: model 'explore'
+        public static final String EXPLORES = "explores";                  // model 'explore' -> pluralized (confirmed vs Node model)
         public static final String COMMENTS = "comments";                  // model 'comments'
         // --- banner (Phase-2) collections ---
-        public static final String BANNERS = "banners";                    // VERIFY: model 'banner'
+        public static final String BANNERS = "banners";                    // model 'banner' -> pluralized (confirmed vs Node model)
         public static final String NOTICE_BOARDS = "notice_boards";        // model 'notice_boards'
         public static final String WARNINGS = "warnings";                  // model 'warnings'
         public static final String CONSULTANT_BOOSTS = "consultant_boosts";// model 'consultant_boosts'
         public static final String STATS = "stats";                        // model 'stats'
-        public static final String SEED_MASTERS = "seed_masters";          // VERIFY: model 'seed_master'
+        public static final String SEED_MASTERS = "seed_masters";          // model 'seed_master' -> pluralized (confirmed vs Node model)
         public static final String FEEDBACKS = "feedbacks";                // model 'feedbacks'
         public static final String HOROSCOPES = "horoscopes";              // model 'horoscopes'
         public static final String USER_INTAKE_FORMS = "user_intake_forms";// model 'user_intake_forms'
@@ -81,7 +81,7 @@ public class AppConstants {
         public static final String CONSULTANT_FORM_REQUESTS = "consultantformrequests"; // model 'consultantformrequests'
         public static final String WAITLISTS = "waitlists";                // model 'waitlists'
         // --- week-3 collections ---
-        public static final String NOTIFICATIONS = "notifications";        // VERIFY: model 'notifications'
+        public static final String NOTIFICATIONS = "notifications";        // VERIFY vs DB: model 'notifications' (a typo'd model 'notificationns' also exists - see NOTIFICATION_RECORDS)
         public static final String SUPPORT_MASTERS = "support_masters";    // model 'support_masters'
         public static final String WALLETS = "wallets";                    // model 'wallets'
         // --- consultant-discovery (Phase-2.1) collections ---
@@ -109,12 +109,13 @@ public class AppConstants {
         public static final String INFLUENCERS = "influencers";             // model 'influencers'
         public static final String RECHARGE_TRANSACTION_LOGS = "recharge_transaction_logs";
         public static final String INFLUENCER_LEDGERS = "influencer_ledgers"; // model 'influencer_ledger'
+        public static final String INFLUENCER_SETTLEMENTS = "influencer_settlements"; // model 'influencer_settlements'
         public static final String USER_COUPON_STATES = "user_coupon_states"; // model 'user_coupon_state'
         public static final String FLAG_LOGS = "flag_logs";                 // model 'flag_logs'
         public static final String PLAYSTORE_REVIEW_UPLOADS = "playstore_review_uploads"; // model 'playstore_review_uploads'
         public static final String CONSULTANT_LIVE_EVENTS = "consultant_live_events"; // model 'consultant_live_events'
         public static final String CONSULTANT_LEAVE_MESSAGE_MAPPINGS =
-                "consultant-leave-a-message-mappings"; // VERIFY in TEST: Mongoose model has a hyphenated name
+                "consultant-leave-a-message-mappings"; // model 'consultant-leave-a-message-mapping' -> pluralized (confirmed vs Node model)
         public static final String CONSULTANT_QUICK_NOTES_MESSAGES =
                 "consultant_quick_notes_messages"; // model 'consultant_quick_notes_messages'
         public static final String CONSULTANT_AVAILABLES = "consultant_availables";
@@ -140,7 +141,7 @@ public class AppConstants {
         public static final String JAVA_LIVE_EVENT_TIMERS = "java_live_event_timers";
         // --- authentication migration collections ---
         public static final String APP_VERSION_MODELS = "app_version_models"; // model 'app_version_model'
-        public static final String COMMUNITY_MAPPINGS = "communitymappings";  // model 'communityMappings' — VERIFY in TEST
+        public static final String COMMUNITY_MAPPINGS = "communitymappings";  // model 'communityMappings' -> lowercased (confirmed vs Node model)
         public static final String REFERS = "refers";                        // model 'refer'
         public static final String COMMON_MESSAGES = "common_messages";      // model 'Common_messages'
         public static final String ADMIN_READ_TRACKINGS = "admin_read_trackings"; // model 'adminReadTracking'
