@@ -3,6 +3,7 @@ package com.vedicmeet.appserver.admin;
 import com.vedicmeet.appserver.migration.MigrationWrite;
 import com.vedicmeet.appserver.security.RequireRole;
 import com.vedicmeet.appserver.security.Role;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,7 +11,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -27,16 +30,20 @@ public class AdminMeditationController {
         this.service = service;
     }
 
-    @PostMapping("/category_add")
+    @PostMapping(value = "/category_add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @MigrationWrite
-    public ResponseEntity<Map<String, Object>> addCategory(@RequestBody(required = false) Map<String, Object> body) {
-        return execute("Meditation category added successfully", () -> service.addMeditationCategory(body));
+    public ResponseEntity<Map<String, Object>> addCategory(
+            @RequestParam Map<String, String> body,
+            @RequestPart(value = "meditationImage", required = false) MultipartFile meditationImage) {
+        return execute("Meditation category added successfully", () -> service.addMeditationCategory(body, meditationImage));
     }
 
-    @PutMapping("/category_update")
+    @PutMapping(value = "/category_update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @MigrationWrite
-    public ResponseEntity<Map<String, Object>> updateCategory(@RequestBody(required = false) Map<String, Object> body) {
-        return execute("Meditation category updated successfully", () -> service.updateMeditationCategory(body));
+    public ResponseEntity<Map<String, Object>> updateCategory(
+            @RequestParam Map<String, String> body,
+            @RequestPart(value = "meditationImage", required = false) MultipartFile meditationImage) {
+        return execute("Meditation category updated successfully", () -> service.updateMeditationCategory(body, meditationImage));
     }
 
     @PutMapping("/category_block_unblock")
@@ -55,16 +62,26 @@ public class AdminMeditationController {
         return execute("Meditation category details fetched successfully", () -> service.getMeditationCategory(query));
     }
 
-    @PostMapping("/media_add")
+    @PostMapping(value = "/media_add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @MigrationWrite
-    public ResponseEntity<Map<String, Object>> addMedia(@RequestBody(required = false) Map<String, Object> body) {
-        return execute("Meditation media added successfully", () -> service.addMeditationMedia(body));
+    public ResponseEntity<Map<String, Object>> addMedia(
+            @RequestParam Map<String, String> body,
+            @RequestPart(value = "meditationVideo", required = false) MultipartFile meditationVideo,
+            @RequestPart(value = "meditationImage", required = false) MultipartFile meditationImage,
+            @RequestPart(value = "meditationMantra", required = false) MultipartFile meditationMantra,
+            @RequestPart(value = "meditationMusic", required = false) MultipartFile meditationMusic) {
+        return execute("Meditation media added successfully", () -> service.addMeditationMedia(body, meditationVideo, meditationImage, meditationMantra, meditationMusic));
     }
 
-    @PutMapping("/media_update")
+    @PutMapping(value = "/media_update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @MigrationWrite
-    public ResponseEntity<Map<String, Object>> updateMedia(@RequestBody(required = false) Map<String, Object> body) {
-        return execute("Meditation media updated successfully", () -> service.editMeditationMedia(body));
+    public ResponseEntity<Map<String, Object>> updateMedia(
+            @RequestParam Map<String, String> body,
+            @RequestPart(value = "meditationVideo", required = false) MultipartFile meditationVideo,
+            @RequestPart(value = "meditationImage", required = false) MultipartFile meditationImage,
+            @RequestPart(value = "meditationMantra", required = false) MultipartFile meditationMantra,
+            @RequestPart(value = "meditationMusic", required = false) MultipartFile meditationMusic) {
+        return execute("Meditation media updated successfully", () -> service.editMeditationMedia(body, meditationVideo, meditationImage, meditationMantra, meditationMusic));
     }
 
     @PutMapping("/media_block_unblock")
@@ -84,7 +101,6 @@ public class AdminMeditationController {
     }
 
     @PostMapping("/user_meditation_history")
-    @MigrationWrite
     public ResponseEntity<Map<String, Object>> userMeditationHistory(@RequestBody(required = false) Map<String, Object> body) {
         return execute("User meditation history added successfully", () -> service.userListMeditationHistory(body));
     }
