@@ -6,14 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-/**
- * Preserves the Node error contract:
- *   - validation / business failures  -> HTTP 200 { success:false, message }
- *   - invalid/expired token (thrown)  -> HTTP 401 { success:false, message }
- *
- * The Node code returns res.json({success:false,...}) (HTTP 200) for most logical
- * failures, and only res.status(401) inside the auth middleware catch block.
- */
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -38,7 +31,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.ok(ApiResponse.fail(ex.getMessage() == null ? "Internal error" : ex.getMessage()));
     }
 
-    /** Marker exception for token failures that should map to HTTP 401. */
+
     public static class TokenException extends RuntimeException {
         public TokenException(String message) { super(message); }
     }

@@ -148,6 +148,11 @@ vedicmeet:
   consultant-session:
     execution-enabled: ${CONSULTANT_SESSION_EXECUTION_ENABLED:false}
     immediate-refund-enabled: ${CONSULTANT_IMMEDIATE_REFUND_ENABLED:false}
+  payout:
+    # MONEY. AdminPayoutService.uploadWithSettlement (admin/payout.js upload-with-settlement) moves funds.
+    # This is a SECOND, payout-specific gate on top of @MigrationWrite. Keep false until a human has reviewed
+    # the settlement port AND the multipart-file transport is wired. Never enable to pass a test.
+    execution-enabled: ${PAYOUT_EXECUTION_ENABLED:false}
   task-reminder:
     # Durable replacement for Node's in-process node-schedule reminders. It is intentionally
     # independent and disabled until TEST FCM delivery + collection-name parity are signed off.

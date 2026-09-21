@@ -26,9 +26,28 @@ public class SecurityHeadersFilter extends OncePerRequestFilter {
         response.setHeader("X-Content-Type-Options", "nosniff");
         response.setHeader("X-Frame-Options", "DENY");
         response.setHeader("Referrer-Policy", "no-referrer");
-        response.setHeader("Cache-Control", "no-store");
-        // This is a JSON API; a strict CSP prevents any accidental HTML/script rendering.
-        response.setHeader("Content-Security-Policy", "default-src 'none'; frame-ancestors 'none'");
+
+        String path = request.getRequestURI();
+        if (isSwagger(path)) {
+            // Swagger UI is a real web page (its own CSS/JS/fonts). The strict API CSP would block
+            // those assets, so serve a scoped, still-conservative policy for the docs paths only.
+            response.setHeader("Cache-Control", "no-cache");
+            response.setHeader("Content-Security-Policy",
+                    "default-src 'self'; script-src 'self' 'unsafe-inline'; "
+                            + "style-src 'self' 'unsafe-inline'; img-src 'self' data:; "
+                            + "font-src 'self' data:; frame-ancestors 'none'");
+        } else {
+            response.setHeader("Cache-Control", "no-store");
+            // This is a JSON API; a strict CSP prevents any accidental HTML/script rendering.
+            response.setHeader("Content-Security-Policy", "default-src 'none'; frame-ancestors 'none'");
+        }
         filterChain.doFilter(request, response);
+    }
+
+    /** Swagger UI + OpenAPI spec paths that must be allowed to load their own web assets. */
+    private boolean isSwagger(String path) {
+        return path != null && (path.startsWith("/swagger-ui")
+                || path.startsWith("/v3/api-docs")
+                || path.equals("/swagger-ui.html"));
     }
 }

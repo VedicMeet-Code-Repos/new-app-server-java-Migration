@@ -76,6 +76,7 @@ public class AppConstants {
         public static final String AREA_OF_CONCERN_REMEDIES = "area_of_concern_remedies";
         public static final String ANALYTICS_LOGS = "analytics_logs";
         public static final String CLICK_TRACKINGS = "clicktrackings";
+        public static final String ENTRY_TRACKINGS = "entry_trackings"; // model 'entry_tracking' -> Mongoose pluralized
         public static final String ZODIAC_MESSAGES = "zodiacmessages";
         public static final String REVIEW_AND_RATINGS = "review_and_ratings"; // model 'review_and_ratings'
         public static final String COUPONS = "coupons";                    // model 'coupons'
@@ -94,6 +95,8 @@ public class AppConstants {
         public static final String REVIEW_REPLIES = "review_replies";      // model 'review_reply' (pluralized)
         public static final String CONSULTANT_SLOTS_BOOKS = "consultant_slots_books"; // model 'consultant_slots_book'
         public static final String NOTIFICATION_RECORDS = "notificationns"; // model 'notificationns' (support writes use this, NOT 'notifications')
+        public static final String SCHEDULED_NOTIFICATIONS = "shedulednotifications"; // model 'shedulednotifications' (sic - misspelled in Node; already plural, Mongoose keeps as-is)
+        public static final String NOTIFICATION_MESSAGES = "notificationmessages"; // model 'NotificationMessage' (Mongoose pluralized -> 'notificationmessages')
         public static final String CUSTOMER_SUPPORT_QUERIES = "customer_support_queries"; // model 'customer_support_queries'
         public static final String CUSTOMER_SUPPORT_CHATS = "customer_support_chats"; // model 'customer_support_chats'
         public static final String ADMINS = "admins";                      // model 'admin'

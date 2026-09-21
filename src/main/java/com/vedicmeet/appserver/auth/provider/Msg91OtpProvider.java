@@ -52,32 +52,35 @@ public class Msg91OtpProvider implements OtpProvider {
     @Override
     public OtpResult send(String phonePrefix, String phone) {
         requireConfigured(true);
-        String path = "/api/v5/otp?template_id=" + enc(templateId) + "&mobile=" + enc(phonePrefix + phone)
+        // MSG91 v5 send-OTP is a POST and expects the mobile as country-code+number with NO '+'.
+        String path = "/api/v5/otp?template_id=" + enc(templateId) + "&mobile=" + enc(msisdn(phonePrefix, phone))
                 + "&invisible=1&unicode=0";
-        return call(path, "Failed to send OTP");
+        return call(path, "POST", "Failed to send OTP");
     }
 
     @Override
     public OtpResult verify(String phonePrefix, String phone, String otp) {
         requireConfigured(false);
-        String path = "/api/v5/otp/verify?otp=" + enc(otp) + "&mobile=" + enc(phonePrefix + phone);
-        return call(path, "Failed to verify OTP");
+        String path = "/api/v5/otp/verify?otp=" + enc(otp) + "&mobile=" + enc(msisdn(phonePrefix, phone));
+        return call(path, "GET", "Failed to verify OTP");
     }
 
     @Override
     public OtpResult resend(String phonePrefix, String phone) {
         requireConfigured(false);
-        String path = "/api/v5/otp/retry?retrytype=text&mobile=" + enc(phonePrefix + phone);
-        return call(path, "Failed to resend OTP");
+        String path = "/api/v5/otp/retry?retrytype=text&mobile=" + enc(msisdn(phonePrefix, phone));
+        return call(path, "GET", "Failed to resend OTP");
     }
 
-    private OtpResult call(String path, String fallback) {
+    private OtpResult call(String path, String method, String fallback) {
         try {
-            HttpRequest request = HttpRequest.newBuilder(URI.create(baseUrl + path))
+            HttpRequest.Builder builder = HttpRequest.newBuilder(URI.create(baseUrl + path))
                     .timeout(Duration.ofSeconds(10))
                     .header("authkey", authKey)
-                    .header("Accept", "application/json")
-                    .GET().build();
+                    .header("Accept", "application/json");
+            HttpRequest request = ("POST".equals(method)
+                    ? builder.POST(HttpRequest.BodyPublishers.noBody())
+                    : builder.GET()).build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             Map<String, Object> body = response.body() == null || response.body().isBlank()
                     ? new LinkedHashMap<>()
@@ -99,6 +102,13 @@ public class Msg91OtpProvider implements OtpProvider {
         if (!enabled || blank(authKey) || blank(baseUrl) || (needTemplate && blank(templateId))) {
             throw new AuthException("OTP provider is not configured");
         }
+    }
+
+    /** MSG91 expects the mobile as country-code + number with NO leading '+' (e.g. 919999999999). */
+    private static String msisdn(String phonePrefix, String phone) {
+        String prefix = phonePrefix == null ? "" : phonePrefix.trim();
+        if (prefix.startsWith("+")) prefix = prefix.substring(1);
+        return prefix + (phone == null ? "" : phone.trim());
     }
 
     private static String enc(String value) { return URLEncoder.encode(value, StandardCharsets.UTF_8); }
