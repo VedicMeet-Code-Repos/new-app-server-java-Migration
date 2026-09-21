@@ -20,3 +20,11 @@ node_modules/
 target/
 .env.local
 application-local.*
+
+# Real production/secret env files — NEVER commit. Only the *.example templates are tracked.
+ops/*.env
+appserver-prod.env
+application-prod-secrets.*
+
+# Prod config holds real secrets (baked into the jar at build, but never committed).
+application-prod.yml
