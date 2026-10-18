@@ -2,14 +2,16 @@ version: 0.2
 
 phases:
   install:
-    runtime-versions:
-      java: corretto21
+    commands:
+      - echo "Installing Maven..."
+      - apt-get update -y || yum update -y || true
+      - apt-get install -y maven || yum install -y maven || true
+      - mvn --version
 
   pre_build:
     commands:
       - echo "Starting build at $(date)"
       - java -version
-      - mvn --version
 
   build:
     commands:
