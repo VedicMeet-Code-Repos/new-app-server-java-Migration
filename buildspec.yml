@@ -1,0 +1,29 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto21
+
+  pre_build:
+    commands:
+      - echo "Starting build at $(date)"
+      - java -version
+      - mvn --version
+
+  build:
+    commands:
+      - echo "Running Maven build"
+      - mvn clean package -DskipTests
+
+  post_build:
+    commands:
+      - echo "Build completed at $(date)"
+      - ls -lh target/*.jar
+
+artifacts:
+  files:
+    - target/*.jar
+    - appspec.yml
+    - scripts/**/*
+  discard-paths: no

@@ -1,0 +1,22 @@
+version: 0.0
+os: linux
+files:
+  - source: target/
+    destination: /opt/vedicmeet/
+hooks:
+  ApplicationStop:
+    - location: scripts/stop_server.sh
+      timeout: 30
+      runas: root
+  AfterInstall:
+    - location: scripts/after_install.sh
+      timeout: 60
+      runas: root
+  ApplicationStart:
+    - location: scripts/start_server.sh
+      timeout: 60
+      runas: root
+  ValidateService:
+    - location: scripts/validate_service.sh
+      timeout: 30
+      runas: root
