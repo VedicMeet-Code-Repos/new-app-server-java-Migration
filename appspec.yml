@@ -1,9 +1,9 @@
 version: 0.0
 os: linux
 files:
-  - source: target/new-app-server-java-0.0.1-SNAPSHOT.jar
+  - source: target/
     destination: /opt/vedicmeet/
-    overwrite: true
+file_exists_behavior: OVERWRITE
 hooks:
   ApplicationStop:
     - location: scripts/stop_server.sh
@@ -11,7 +11,7 @@ hooks:
       runas: root
   AfterInstall:
     - location: scripts/after_install.sh
-      timeout: 30
+      timeout: 60
       runas: root
   ApplicationStart:
     - location: scripts/start_server.sh
