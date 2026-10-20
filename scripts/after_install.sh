@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-jar="/opt/vedicmeet/new-app-server-java.jar"
+jar="/opt/vedicmeet/new-app-server-java-0.0.1-SNAPSHOT.jar"
 
 if [[ ! -f "$jar" ]]; then
     echo "Deployment failed: expected application jar at $jar." >&2
