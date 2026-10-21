@@ -9,6 +9,10 @@ hooks:
     - location: scripts/stop_server.sh
       timeout: 30
       runas: root
+  BeforeInstall:
+    - location: scripts/before_install.sh
+      timeout: 60
+      runas: root
   AfterInstall:
     - location: scripts/after_install.sh
       timeout: 60
