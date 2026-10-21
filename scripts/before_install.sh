@@ -1,57 +1,59 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/bash
+set -e
 
 env_dir="/etc/vedicmeet"
 env_file="${env_dir}/appserver.env"
 ssm_param="/vedicmeet/appserver-env"
 region="ap-south-1"
 
-# 1. Create the config directory if it doesn't already exist.
-if ! mkdir -p "$env_dir"; then
-    echo "ERROR: failed to create directory ${env_dir}." >&2
+echo "[before_install] starting; whoami=$(whoami) PATH=$PATH"
+
+# Resolve the AWS CLI explicitly. CodeDeploy runs hooks via the agent, whose
+# PATH often omits /usr/local/bin where the AWS CLI v2 lives. A bare `aws`
+# can fail with "command not found" — which is the usual reason this hook
+# appears to succeed yet never writes the file.
+AWS_BIN="$(command -v aws || true)"
+if [ -z "$AWS_BIN" ]; then
+    for candidate in /usr/local/bin/aws /usr/bin/aws /snap/bin/aws; do
+        if [ -x "$candidate" ]; then
+            AWS_BIN="$candidate"
+            break
+        fi
+    done
+fi
+if [ -z "$AWS_BIN" ]; then
+    echo "ERROR: aws CLI not found on PATH or common locations. Install AWS CLI on the instance." >&2
     exit 1
 fi
+echo "[before_install] using aws at: $AWS_BIN"
 
-# 2. Fetch the env contents from SSM Parameter Store.
-#    --with-decryption decrypts SecureString parameters (no-op for String).
-if ! env_contents="$(aws ssm get-parameter \
+# 1. Create the config directory if it does not exist.
+mkdir -p "$env_dir"
+echo "[before_install] ensured directory $env_dir exists"
+
+# 2. Fetch the SSM parameter with decryption. On any failure, exit 1 clearly.
+echo "[before_install] fetching SSM parameter $ssm_param from $region"
+if ! env_contents="$("$AWS_BIN" ssm get-parameter \
     --name "$ssm_param" \
     --with-decryption \
     --region "$region" \
     --query 'Parameter.Value' \
     --output text)"; then
-    echo "ERROR: failed to fetch SSM parameter ${ssm_param} in ${region}." >&2
+    echo "ERROR: failed to fetch SSM parameter ${ssm_param} in ${region}. Check the instance IAM role has ssm:GetParameter (and kms:Decrypt for SecureString)." >&2
     exit 1
 fi
 
-if [[ -z "$env_contents" || "$env_contents" == "None" ]]; then
-    echo "ERROR: SSM parameter ${ssm_param} is empty." >&2
+if [ -z "$env_contents" ] || [ "$env_contents" = "None" ]; then
+    echo "ERROR: SSM parameter ${ssm_param} returned an empty value." >&2
     exit 1
 fi
 
-# 3. Write atomically: stage to a temp file, then move into place.
-tmp_file="$(mktemp)"
-if ! printf '%s' "$env_contents" > "$tmp_file"; then
-    echo "ERROR: failed to write temporary env file." >&2
-    rm -f "$tmp_file"
-    exit 1
-fi
+# 3. Write the value to the env file.
+printf '%s\n' "$env_contents" > "$env_file"
+echo "[before_install] wrote $env_file"
 
-if ! mv "$tmp_file" "$env_file"; then
-    echo "ERROR: failed to move env file into ${env_file}." >&2
-    rm -f "$tmp_file"
-    exit 1
-fi
+# 4. Permissions 600, owned by root.
+chown root:root "$env_file"
+chmod 0600 "$env_file"
 
-# 4. Root-owned, world-readable (644).
-if ! chown root:root "$env_file"; then
-    echo "ERROR: failed to set ownership on ${env_file}." >&2
-    exit 1
-fi
-
-if ! chmod 0644 "$env_file"; then
-    echo "ERROR: failed to set permissions on ${env_file}." >&2
-    exit 1
-fi
-
-echo "Wrote environment file to ${env_file} from SSM parameter ${ssm_param} (${region})."
+echo "[before_install] done. $(ls -l "$env_file")"
