@@ -17,15 +17,22 @@ phases:
     commands:
       - echo "Running Maven build"
       - mvn clean package -DskipTests
+      - echo "Renaming boot jar to vedicmeet.jar"
+      # Rename the versioned Spring Boot jar to the stable name the systemd
+      # unit expects (/opt/vedicmeet/vedicmeet.jar). Exclude the *.original
+      # produced by the Spring Boot repackage goal.
+      - BOOT_JAR="$(ls target/*.jar | grep -v '\.original$' | head -n1)"
+      - echo "Found boot jar: $BOOT_JAR"
+      - cp "$BOOT_JAR" target/vedicmeet.jar
 
   post_build:
     commands:
       - echo "Build completed at $(date)"
-      - ls -lh target/*.jar
+      - ls -lh target/vedicmeet.jar
 
 artifacts:
   files:
-    - target/*.jar
+    - target/vedicmeet.jar
     - appspec.yml
     - scripts/**/*
   discard-paths: no

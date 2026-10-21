@@ -2,7 +2,7 @@
 set -e
 
 env_file="/etc/vedicmeet/appserver.env"
-jar="/opt/vedicmeet/new-app-server-java-0.0.1-SNAPSHOT.jar"
+service_file="/etc/systemd/system/vedicmeet.service"
 
 echo "[after_install] starting; checking $env_file"
 
@@ -24,12 +24,16 @@ set -a
 set +a
 echo "[after_install] loaded environment from $env_file"
 
-# 3. Continue with the rest of the deployment steps.
-if [ ! -f "$jar" ]; then
-    echo "ERROR: expected application jar at ${jar}." >&2
+# 3. Ensure the systemd unit exists (written by scripts/create_service.sh,
+#    which runs earlier in the AfterInstall hook).
+if [ ! -f "$service_file" ]; then
+    echo "ERROR: ${service_file} is missing. scripts/create_service.sh should run before this script in the AfterInstall hook." >&2
     exit 1
 fi
 
-chmod 0644 "$jar"
+# 4. Register the service with systemd and enable it on boot.
 systemctl daemon-reload
-echo "[after_install] done. Application files installed and environment loaded."
+systemctl enable vedicmeet.service
+echo "[after_install] vedicmeet.service registered and enabled"
+
+echo "[after_install] done. Application files installed and service registered."
