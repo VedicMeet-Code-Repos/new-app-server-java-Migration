@@ -24,12 +24,37 @@ set -a
 set +a
 echo "[after_install] loaded environment from $env_file"
 
-# 3. Continue with the rest of the deployment steps.
+# 3. Verify the JAR was deployed.
 if [ ! -f "$jar" ]; then
     echo "ERROR: expected application jar at ${jar}." >&2
     exit 1
 fi
 
 chmod 0644 "$jar"
+
+# 4. Write the systemd service file on every deployment.
+cat > /etc/systemd/system/vedicmeet.service << 'SVCEOF'
+[Unit]
+Description=Vedicmeet Java Application
+After=network.target
+
+[Service]
+EnvironmentFile=/etc/vedicmeet/appserver.env
+User=root
+WorkingDirectory=/opt/vedicmeet
+ExecStart=/usr/bin/java -jar /opt/vedicmeet/new-app-server-java-0.0.1-SNAPSHOT.jar
+SuccessExitStatus=143
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+SVCEOF
+
 systemctl daemon-reload
+systemctl enable vedicmeet
+echo "[after_install] vedicmeet.service unit file written and enabled."
+
 echo "[after_install] done. Application files installed and environment loaded."
